@@ -13,7 +13,7 @@ export default function TestModal() {
   const imageRef = useRef<HTMLInputElement>(null);
 
   const [result, setResult] = useState<{
-    status: "green" | "red";
+    status: "green" | "red" | "yellow";
     text: string;
   } | null>(null);
 
@@ -22,6 +22,15 @@ export default function TestModal() {
 
     if (file) {
       const imageColor = file.name.split(".")?.[0];
+
+      if (imageColor.startsWith("green")) {
+        setImageName("green");
+      } else if (imageColor.startsWith("yellow")) {
+        setImageName("yellow");
+      } else {
+        setImageName("red");
+      }
+
       setImageName(imageColor);
 
       const reader = new FileReader();
@@ -43,11 +52,20 @@ export default function TestModal() {
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
     setResult({
-      status: imageName === "green" ? "green" : "red",
+      status:
+        imageName === "green"
+          ? "green"
+          : imageName == "yellow"
+          ? "yellow"
+          : "red",
       text:
         imageName === "green"
           ? "Image contains a green traffic light"
-          : "Image contains a red traffic light",
+          : imageName === "red"
+          ? "Image contains a red traffic light"
+          : imageName === "yellow"
+          ? "Image contains a yellow traffic light"
+          : "Something went wrong",
     });
 
     setIsLoading(false);
@@ -114,6 +132,8 @@ export default function TestModal() {
               <div className="flex items-center justify-center mb-2">
                 {result.status === "green" ? (
                   <CheckCircle className="h-8 w-8 text-green-500" />
+                ) : result.status === "yellow" ? (
+                  <CheckCircle className="h-8 w-8 text-yellow-500" />
                 ) : (
                   <XCircle className="h-8 w-8 text-red-500" />
                 )}
