@@ -30,7 +30,9 @@ export default function TestModal() {
       };
       reader.readAsDataURL(file);
 
-      imageRef.current && (imageRef.current.value = "");
+      if (imageRef.current) {
+        imageRef.current.value = "";
+      }
     }
   };
 
